@@ -1,0 +1,24 @@
+:root { color-scheme: dark; --bg:#0f1115; --card:#181b22; --line:#262b36; --txt:#e8eaf0; --mute:#8b93a7; --acc:#25d366; --danger:#e5484d; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--txt); font: 16px/1.5 system-ui, sans-serif; }
+main { max-width: 520px; margin: 0 auto; padding: 16px; }
+h1 { font-size: 22px; margin: 8px 0 16px; }
+h2 { font-size: 13px; margin: 0 0 12px; color: var(--mute); text-transform: uppercase; letter-spacing: .06em; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+.row { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.row:last-child { border: 0; }
+label { display: block; color: var(--mute); font-size: 14px; }
+input:not([type=checkbox]) { width: 100%; padding: 12px; margin: 6px 0 12px; background: var(--bg); color: var(--txt); border: 1px solid var(--line); border-radius: 10px; font: inherit; }
+button { width: 100%; padding: 12px; margin-top: 6px; border: 0; border-radius: 10px; background: var(--acc); color: #06210f; font: inherit; font-weight: 600; }
+button.ghost { background: transparent; color: var(--txt); border: 1px solid var(--line); }
+button.danger { background: var(--danger); color: #fff; }
+.msg { min-height: 1.2em; margin: 8px 0 0; color: var(--danger); font-size: 14px; }
+.msg.ok { color: var(--acc); }
+.hint { color: var(--mute); font-size: 14px; margin: 6px 0 0; }
+.code { font: 700 30px/1.2 ui-monospace, monospace; letter-spacing: .08em; text-align: center; padding: 14px; background: var(--bg); border-radius: 10px; margin: 8px 0; }
+#qr { display: block; margin: 10px auto; width: 240px; height: 240px; background: #fff; padding: 8px; border-radius: 10px; }
+.feature { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--txt); }
+.feature:last-child { border: 0; }
+.feature small { display: block; color: var(--mute); }
+.feature input { width: 22px; height: 22px; accent-color: var(--acc); flex: none; }

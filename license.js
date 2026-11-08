@@ -125,4 +125,6 @@ function stopLoop() {
   clearTimeout(timer);
 }
 
-module.exports = { check, bindNumber, startLoop, stopLoop, remainingMs, describe, getDeviceId };
+const info = () => ({ expiresAt: state.expiresAt, remainingMs: remainingMs(), number: state.number });
+
+module.exports = { check, bindNumber, startLoop, stopLoop, remainingMs, describe, getDeviceId, info };

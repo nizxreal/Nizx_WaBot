@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nizx WaBot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1 id="title">Nizx WaBot</h1>
+
+  <section id="login" class="card" hidden>
+    <h2>Masuk</h2>
+    <input id="pw" type="password" placeholder="Password dashboard" autocomplete="current-password">
+    <button id="btn-login">Masuk</button>
+    <p id="login-msg" class="msg"></p>
+  </section>
+
+  <div id="app" hidden>
+    <section class="card">
+      <h2>Status</h2>
+      <div class="row"><span>WhatsApp</span><b id="st-bot">-</b></div>
+      <div class="row"><span>Nomor</span><b id="st-num">-</b></div>
+      <div class="row"><span>Lisensi</span><b id="st-lic">-</b></div>
+    </section>
+
+    <section class="card" id="pair-card">
+      <h2>Pairing</h2>
+      <div id="pair-form">
+        <input id="num" inputmode="numeric" placeholder="Nomor WA, contoh 628123456789">
+        <button id="btn-code">Minta kode pairing</button>
+        <button id="btn-qr" class="ghost">Pakai QR (scan dari HP lain)</button>
+      </div>
+      <div id="pair-out" hidden>
+        <div id="code" class="code" hidden></div>
+        <img id="qr" alt="QR WhatsApp" hidden>
+        <p class="hint" id="pair-hint"></p>
+      </div>
+      <p id="pair-msg" class="msg"></p>
+    </section>
+
+    <section class="card" id="logout-card" hidden>
+      <h2>Sesi WhatsApp</h2>
+      <button id="btn-logout" class="danger">Logout WhatsApp</button>
+    </section>
+
+    <section class="card">
+      <h2>Pengaturan</h2>
+      <label>Prefix perintah <input id="prefix" maxlength="3"></label>
+      <label>Nama bot <input id="botname" maxlength="40"></label>
+      <button id="btn-save">Simpan</button>
+      <p id="set-msg" class="msg"></p>
+    </section>
+
+    <section class="card">
+      <h2>Fitur</h2>
+      <div id="features"></div>
+    </section>
+
+    <button id="btn-signout" class="ghost">Keluar dari dashboard</button>
+  </div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
