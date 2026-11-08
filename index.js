@@ -54,27 +54,14 @@ function openUrl(url) {
   }
 }
 
-const ask = (q) => new Promise((res) => rl.question(q, res));
 
-async function terminalPairing() {
-  if (bot.status === 'open') return console.log('Bot sudah terhubung.');
-  const num = (await ask('Nomor WA (628xxx, kosongkan untuk batal): ')).trim();
-  if (!num) return;
-  try {
-    const code = await bot.pair(num);
-    console.log(`\nKode pairing: ${String(code).match(/.{1,4}/g).join('-')}`);
-    console.log('WhatsApp > Perangkat tertaut > Tautkan perangkat > Tautkan dengan nomor telepon.');
-  } catch (e) {
-    console.error('Pairing gagal:', e.message);
-  }
-}
 
 function menu() {
   if (dashboard) console.log(`\nTekan Enter untuk membuka dashboard (${DASH_URL})`);
-  else console.log('\nDashboard belum terpasang. Tekan Enter untuk pairing lewat terminal.');
+  else console.log('\nDashboard tidak aktif (lihat pesan error di atas). Pairing hanya bisa lewat dashboard.');
   rl.once('line', async () => {
     if (dashboard) openUrl(DASH_URL);
-    else await terminalPairing();
+    else console.log('Dashboard tidak aktif. Tutup bot lain yang memakai port 3000, lalu jalankan ulang.');
     menu();
   });
 }

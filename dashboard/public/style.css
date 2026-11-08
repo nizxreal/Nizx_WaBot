@@ -22,3 +22,9 @@ button.danger { background: var(--danger); color: #fff; }
 .feature:last-child { border: 0; }
 .feature small { display: block; color: var(--mute); }
 .feature input { width: 22px; height: 22px; accent-color: var(--acc); flex: none; }
+
+.sub { margin: -6px 0 12px; color: var(--mute); font-size: 14px; }
+select { width: 100%; padding: 12px; margin: 6px 0 12px; background: var(--bg); color: var(--txt); border: 1px solid var(--line); border-radius: 10px; font: inherit; }
+.btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.btns button { margin-top: 0; }
+.code { color: var(--acc); font-size: 34px; cursor: pointer; }

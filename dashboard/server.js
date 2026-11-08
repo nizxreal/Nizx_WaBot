@@ -115,7 +115,7 @@ async function start({ bot, license, registry, settings, host = '127.0.0.1', por
       const l = license.info();
       res.json({
         ok: true,
-        bot: { status: b.status, number: b.number, pairingCode: b.pairingCode, qr: await qrImage(b.qr) },
+        bot: { hasSession: bot.hasSession(), status: b.status, number: b.number, pairingCode: b.pairingCode, qr: await qrImage(b.qr) },
         license: { expiresAt: l.expiresAt, days: Math.max(0, Math.ceil(l.remainingMs / 86400000)), number: l.number },
       });
     } catch (e) {
@@ -175,6 +175,7 @@ async function start({ bot, license, registry, settings, host = '127.0.0.1', por
     }
   });
 
+  require('./control')(api, bot);
   app.use('/api', api);
 
   // eslint-disable-next-line no-unused-vars

@@ -19,30 +19,47 @@
 
   <div id="app" hidden>
     <section class="card">
-      <h2>Status</h2>
-      <div class="row"><span>WhatsApp</span><b id="st-bot">-</b></div>
-      <div class="row"><span>Nomor</span><b id="st-num">-</b></div>
+      <h2>Koneksi Bot</h2>
+      <p class="sub">Status koneksi, kode pairing, dan QR.</p>
+      <div class="row"><span>Nomor bot</span><b id="st-num">-</b></div>
+      <div class="row"><span>Status</span><b id="st-bot">-</b></div>
       <div class="row"><span>Lisensi</span><b id="st-lic">-</b></div>
-    </section>
-
-    <section class="card" id="pair-card">
-      <h2>Pairing</h2>
-      <div id="pair-form">
-        <input id="num" inputmode="numeric" placeholder="Nomor WA, contoh 628123456789">
-        <button id="btn-code">Minta kode pairing</button>
-        <button id="btn-qr" class="ghost">Pakai QR (scan dari HP lain)</button>
-      </div>
       <div id="pair-out" hidden>
-        <div id="code" class="code" hidden></div>
+        <div id="code-box" hidden>
+          <p class="hint">Kode pairing (ketuk untuk menyalin)</p>
+          <div id="code" class="code"></div>
+        </div>
         <img id="qr" alt="QR WhatsApp" hidden>
         <p class="hint" id="pair-hint"></p>
       </div>
-      <p id="pair-msg" class="msg"></p>
     </section>
 
-    <section class="card" id="logout-card" hidden>
-      <h2>Sesi WhatsApp</h2>
-      <button id="btn-logout" class="danger">Logout WhatsApp</button>
+    <section class="card">
+      <h2>Kontrol</h2>
+      <p class="sub">Hubungkan, hentikan, atau restart bot.</p>
+
+      <div id="ctl-pair">
+        <label>Nomor WhatsApp Bot
+          <input id="num" inputmode="numeric" placeholder="628123456789">
+        </label>
+        <label>Metode
+          <select id="method">
+            <option value="code">Kode pairing</option>
+            <option value="qr">QR (scan dari HP lain)</option>
+          </select>
+        </label>
+        <button id="btn-connect">Hubungkan</button>
+      </div>
+
+      <div id="ctl-run" hidden>
+        <div class="btns">
+          <button id="btn-start" class="ghost" hidden>Hubungkan</button>
+          <button id="btn-stop" class="ghost">Hentikan</button>
+          <button id="btn-restart" class="ghost">Restart</button>
+        </div>
+        <button id="btn-logout" class="danger">Logout WhatsApp</button>
+      </div>
+      <p id="ctl-msg" class="msg"></p>
     </section>
 
     <section class="card">
