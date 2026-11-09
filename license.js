@@ -9,6 +9,7 @@ const API = 'https://botwa-license.nizxreal.workers.dev';
 
 const DATA_DIR = path.join(__dirname, 'data');
 const DEVICE_FILE = path.join(DATA_DIR, 'device.json');
+const TOKEN_FILE = path.join(DATA_DIR, 'license.json');
 
 const CHECK_MS = 3 * 60 * 60 * 1000; // validasi ulang tiap 3 jam
 const RETRY_MS = 10 * 60 * 1000;     // coba lagi tiap 10 menit bila Worker tak terjangkau
@@ -20,12 +21,17 @@ let stopped = false;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const isTemporary = (reason) => reason === 'unreachable' || reason === 'server_error';
+const resetState = () => {
+  state.expiresAt = null;
+  state.number = null;
+  state.lastOkAt = 0;
+};
 
 const MESSAGES = {
-  no_token: 'LICENSE_TOKEN belum diisi di file .env.',
-  not_found: 'Token tidak ditemukan. Periksa LICENSE_TOKEN di .env.',
+  no_token: 'Token belum dimasukkan.',
+  not_found: 'Token tidak ditemukan. Periksa lagi tokennya.',
   bad_request: 'Format token salah. Contoh: NIZXBOT-XXXX-XXXX-XXXX-XXXX.',
-  expired: 'Masa aktif token habis. Hubungi pemilik untuk perpanjang.',
+  expired: 'Masa aktif token habis. Hubungi pemilik untuk perpanjang, lalu tekan Cek ulang lisensi.',
   revoked: 'Token sudah dicabut oleh pemilik.',
   device_mismatch: 'Token sudah terikat ke perangkat lain. Hubungi pemilik.',
   number_mismatch: 'Token terikat ke nomor WhatsApp lain.',
@@ -47,7 +53,28 @@ function getDeviceId() {
   return deviceId;
 }
 
-const getToken = () => (process.env.LICENSE_TOKEN || '').trim();
+// Token dari dashboard (data/license.json) diutamakan, lalu .env.
+function getStoredToken() {
+  try {
+    const t = JSON.parse(fs.readFileSync(TOKEN_FILE, 'utf8')).token;
+    return typeof t === 'string' ? t.trim() : '';
+  } catch {
+    return '';
+  }
+}
+const getToken = () => getStoredToken() || (process.env.LICENSE_TOKEN || '').trim();
+
+function setToken(token) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.writeFileSync(TOKEN_FILE, JSON.stringify({ token }), { mode: 0o600 });
+  resetState();
+}
+function clearToken() {
+  try {
+    fs.unlinkSync(TOKEN_FILE);
+  } catch {}
+  resetState();
+}
 
 async function post(endpoint, body) {
   try {
@@ -79,6 +106,7 @@ async function check() {
 }
 
 const remainingMs = () => (state.expiresAt ? state.expiresAt - (Date.now() + state.offset) : 0);
+const info = () => ({ expiresAt: state.expiresAt, remainingMs: remainingMs(), number: state.number });
 
 async function bindNumber(number) {
   if (state.number === number) return { ok: true };
@@ -125,6 +153,7 @@ function stopLoop() {
   clearTimeout(timer);
 }
 
-const info = () => ({ expiresAt: state.expiresAt, remainingMs: remainingMs(), number: state.number });
-
-module.exports = { check, bindNumber, startLoop, stopLoop, remainingMs, describe, getDeviceId, info };
+module.exports = {
+  check, bindNumber, startLoop, stopLoop, remainingMs, info, describe,
+  getDeviceId, getStoredToken, setToken, clearToken,
+};

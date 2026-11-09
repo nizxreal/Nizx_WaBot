@@ -17,7 +17,7 @@ async function api(path, body) {
   const res = await fetch(path, opt);
   const data = await res.json().catch(() => ({}));
   if (res.status === 401 && path !== '/api/login') {
-    showLogin();
+    showView('login');
     throw new Error('Belum login');
   }
   if (!res.ok || data.ok === false) throw new Error(data.error || 'Gagal');
@@ -30,14 +30,11 @@ function setMsg(el, text, ok) {
 }
 const fmtCode = (c) => String(c).replace(/-/g, '').match(/.{1,4}/g).join('-');
 
-function showLogin() {
-  clearInterval(timer);
-  $('app').hidden = true;
-  $('login').hidden = false;
-}
-function showApp() {
-  $('login').hidden = true;
-  $('app').hidden = false;
+function showView(v) {
+  $('setup').hidden = v !== 'setup';
+  $('login').hidden = v !== 'login';
+  $('app').hidden = v !== 'app';
+  if (v !== 'app') clearInterval(timer);
 }
 
 async function refreshStatus() {
@@ -46,10 +43,15 @@ async function refreshStatus() {
     const b = d.bot;
     const open = b.status === 'open';
     const stopped = b.status === 'stopped' || b.status === 'replaced';
+    const blocked = d.mode !== 'running';
 
     $('st-bot').textContent = LABEL[b.status] || b.status;
     $('st-num').textContent = b.number || d.license.number || '-';
-    $('st-lic').textContent = d.license.days + ' hari lagi';
+    $('st-lic').textContent = blocked ? 'Tidak aktif' : d.license.days + ' hari lagi';
+
+    $('blocked-card').hidden = !blocked;
+    $('ctl-card').hidden = blocked;
+    if (blocked) $('blocked-msg').textContent = d.reasonText || '';
 
     const showCode = b.status === 'pairing' && !!b.pairingCode;
     const showQr = b.status === 'qr' && !!b.qr;
@@ -116,15 +118,19 @@ async function loadSettings() {
 }
 
 async function init() {
+  clearInterval(timer);
+  let st;
   try {
-    await api('/api/status');
+    st = await api('/api/state');
   } catch {
-    return showLogin();
+    showView('login');
+    return setMsg($('login-msg'), 'Dashboard tidak merespons. Pastikan bot berjalan di Termux.');
   }
-  showApp();
+  if (st.needsSetup) return showView('setup');
+  if (!st.authed) return showView('login');
+  showView('app');
   await loadSettings();
   await refreshStatus();
-  clearInterval(timer);
   timer = setInterval(refreshStatus, 2500);
 }
 
@@ -138,6 +144,28 @@ async function control(action) {
   }
 }
 
+// Kode setup terisi otomatis dari alamat yang dibuka bot (#kode=123456).
+const hm = /kode=(\d{6})/.exec(location.hash);
+if (hm) {
+  $('su-code').value = hm[1];
+  history.replaceState(null, '', location.pathname);
+}
+
+$('btn-setup').addEventListener('click', async () => {
+  const pw = $('su-pw').value;
+  if (pw !== $('su-pw2').value) return setMsg($('setup-msg'), 'Password tidak sama.');
+  setMsg($('setup-msg'), 'Memeriksa token...', true);
+  try {
+    await api('/api/setup', { code: $('su-code').value, token: $('su-token').value, password: pw });
+    $('su-pw').value = '';
+    $('su-pw2').value = '';
+    setMsg($('setup-msg'), '');
+    init();
+  } catch (e) {
+    setMsg($('setup-msg'), e.message);
+  }
+});
+
 $('btn-login').addEventListener('click', async () => {
   try {
     await api('/api/login', { password: $('pw').value });
@@ -150,6 +178,28 @@ $('btn-login').addEventListener('click', async () => {
 });
 $('pw').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') $('btn-login').click();
+});
+
+$('btn-token').addEventListener('click', async () => {
+  setMsg($('bl-msg'), 'Memeriksa token...', true);
+  try {
+    await api('/api/license/token', { token: $('bl-token').value });
+    $('bl-token').value = '';
+    setMsg($('bl-msg'), 'Lisensi aktif.', true);
+    refreshStatus();
+  } catch (e) {
+    setMsg($('bl-msg'), e.message);
+  }
+});
+$('btn-recheck').addEventListener('click', async () => {
+  setMsg($('bl-msg'), 'Memeriksa lisensi...', true);
+  try {
+    await api('/api/license/recheck', {});
+    setMsg($('bl-msg'), 'Lisensi aktif.', true);
+    refreshStatus();
+  } catch (e) {
+    setMsg($('bl-msg'), e.message);
+  }
 });
 
 $('btn-connect').addEventListener('click', async () => {
@@ -196,7 +246,7 @@ $('btn-signout').addEventListener('click', async () => {
   try {
     await api('/api/signout', {});
   } catch {}
-  showLogin();
+  showView('login');
 });
 
 init();

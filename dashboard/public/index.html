@@ -10,6 +10,25 @@
 <main>
   <h1 id="title">Nizx WaBot</h1>
 
+  <section id="setup" class="card" hidden>
+    <h2>Pengaturan awal</h2>
+    <p class="sub">Masukkan token dari pemilik dan buat password dashboard.</p>
+    <label>Kode setup (lihat di Termux)
+      <input id="su-code" inputmode="numeric" maxlength="6" autocomplete="off">
+    </label>
+    <label>Token
+      <input id="su-token" placeholder="NIZXBOT-XXXX-XXXX-XXXX-XXXX" autocapitalize="characters" autocomplete="off">
+    </label>
+    <label>Buat password dashboard (min 8 karakter)
+      <input id="su-pw" type="password" autocomplete="new-password">
+    </label>
+    <label>Ulangi password
+      <input id="su-pw2" type="password" autocomplete="new-password">
+    </label>
+    <button id="btn-setup">Simpan dan mulai</button>
+    <p id="setup-msg" class="msg"></p>
+  </section>
+
   <section id="login" class="card" hidden>
     <h2>Masuk</h2>
     <input id="pw" type="password" placeholder="Password dashboard" autocomplete="current-password">
@@ -34,7 +53,18 @@
       </div>
     </section>
 
-    <section class="card">
+    <section id="blocked-card" class="card" hidden>
+      <h2>Lisensi</h2>
+      <p id="blocked-msg" class="msg"></p>
+      <label>Token
+        <input id="bl-token" placeholder="NIZXBOT-XXXX-XXXX-XXXX-XXXX" autocapitalize="characters" autocomplete="off">
+      </label>
+      <button id="btn-token">Gunakan token ini</button>
+      <button id="btn-recheck" class="ghost">Cek ulang lisensi</button>
+      <p id="bl-msg" class="msg"></p>
+    </section>
+
+    <section id="ctl-card" class="card">
       <h2>Kontrol</h2>
       <p class="sub">Hubungkan, hentikan, atau restart bot.</p>
 
