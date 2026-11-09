@@ -5,7 +5,7 @@ Bot WhatsApp (Baileys) berlisensi token, dijalankan di Termux.
 ## Persyaratan
 
 - Termux terbaru (dari F-Droid atau GitHub, bukan Play Store)
-- Token lisensi dari pemilik (format `BW-XXXX-XXXX-XXXX-XXXX`)
+- Token lisensi dari pemilik (format `NIZXBOT-XXXX-XXXX-XXXX-XXXX`)
 - Satu nomor WhatsApp untuk dipasangkan ke bot
 
 ## Instal

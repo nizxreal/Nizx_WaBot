@@ -24,7 +24,7 @@ const isTemporary = (reason) => reason === 'unreachable' || reason === 'server_e
 const MESSAGES = {
   no_token: 'LICENSE_TOKEN belum diisi di file .env.',
   not_found: 'Token tidak ditemukan. Periksa LICENSE_TOKEN di .env.',
-  bad_request: 'Format token salah. Contoh: BW-XXXX-XXXX-XXXX-XXXX.',
+  bad_request: 'Format token salah. Contoh: NIZXBOT-XXXX-XXXX-XXXX-XXXX.',
   expired: 'Masa aktif token habis. Hubungi pemilik untuk perpanjang.',
   revoked: 'Token sudah dicabut oleh pemilik.',
   device_mismatch: 'Token sudah terikat ke perangkat lain. Hubungi pemilik.',
